@@ -26,57 +26,49 @@ const Dashboard = () => {
 
   return (
     <div style={styles.container}>
-      <h2>Welcome, {user.name}!</h2>
-      <p>
+      <h2 style={styles.heading}>Welcome, {user.name}! 🎉</h2>
+      <p style={styles.points}>
         Your current reward points: <strong>{user.points}</strong>
       </p>
 
       <div style={styles.buttons}>
         <Link to="/report">
-          <button style={styles.button}>Report Waste</button>
+          <button style={styles.button}>📍 Report Waste</button>
         </Link>
         {user.role === "admin" && (
           <Link to="/admin">
-            <button style={styles.adminButton}>Admin Panel</button>
+            <button style={styles.adminButton}>⚙️ Admin Panel</button>
           </Link>
         )}
       </div>
 
-      <h3>Your Waste Reports</h3>
+      <h3 style={styles.subheading}>Your Waste Reports</h3>
       {reports.length === 0 ? (
-        <p>No reports submitted yet.</p>
+        <p style={styles.noReports}>No reports submitted yet.</p>
       ) : (
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Points Earned</th>
-              <th>View</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reports.map((report) => (
-              <tr key={report._id}>
-                <td>{report.description}</td>
-                <td style={getStatusStyle(report.status)}>{report.status}</td>
-                <td>{report.status === "approved" ? `+${report.pointsAwarded} points` : "-"}</td>
-                <td>
-                  <button onClick={() => navigate(`/waste/${report._id}`)} style={styles.viewBtn}>
-                    View Details
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div style={styles.grid}>
+          {reports.map((report) => (
+            <div key={report._id} style={styles.card}>
+              <p style={styles.description}>{report.description}</p>
+              <p style={{ ...styles.status, ...getStatusStyle(report.status) }}>{report.status.toUpperCase()}</p>
+              <p style={styles.pointsEarned}>{report.status !== "pending" ? `🎖 +${report.pointsAwarded} points` : "⏳ Pending Review"}</p>
+              <button onClick={() => navigate(`/waste/${report._id}`)} style={styles.viewBtn}>
+                🔍 View Details
+              </button>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
 };
 
+// Dynamic status styles
 const getStatusStyle = (status) => ({
-  color: status === "approved" ? "green" : status === "rejected" ? "red" : "orange",
+  backgroundColor: status === "approved" ? "#28a745" : status === "rejected" ? "#dc3545" : "#ffc107",
+  color: "white",
+  padding: "5px 10px",
+  borderRadius: "5px",
   fontWeight: "bold",
 });
 
@@ -84,52 +76,96 @@ const styles = {
   container: {
     textAlign: "center",
     padding: "30px",
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#f4f4f4",
     minHeight: "100vh",
+  },
+  heading: {
+    fontSize: "24px",
+    fontWeight: "bold",
+    marginBottom: "10px",
+    color: "#333",
+  },
+  points: {
+    fontSize: "18px",
+    color: "#333",
   },
   buttons: {
     marginTop: "20px",
     display: "flex",
     justifyContent: "center",
-    gap: "20px",
+    gap: "15px",
   },
   button: {
     backgroundColor: "#4CAF50",
     color: "white",
-    padding: "10px 20px",
+    padding: "12px 20px",
     border: "none",
     cursor: "pointer",
-    borderRadius: "5px",
+    borderRadius: "8px",
+    fontSize: "16px",
+    transition: "0.3s",
   },
   adminButton: {
     backgroundColor: "#f44336",
     color: "white",
-    padding: "10px 20px",
+    padding: "12px 20px",
     border: "none",
     cursor: "pointer",
-    borderRadius: "5px",
+    borderRadius: "8px",
+    fontSize: "16px",
+    transition: "0.3s",
   },
-  table: {
-    width: "100%",
-    marginTop: "20px",
-    borderCollapse: "collapse",
-  },
-  tableHeader: {
-    backgroundColor: "#ddd",
+  subheading: {
+    fontSize: "20px",
     fontWeight: "bold",
+    marginTop: "30px",
+    color: "#444",
   },
-  tableCell: {
-    border: "1px solid #ccc",
-    padding: "10px",
+  noReports: {
+    fontSize: "18px",
+    color: "#666",
   },
-
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(500px, 1fr))",
+    gap: "20px",
+    marginTop: "20px",
+  },
+  card: {
+    backgroundColor: "white",
+    padding: "20px",
+    borderRadius: "10px",
+    boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
+    textAlign: "center",
+  },
+  description: {
+    fontSize: "16px",
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: "10px",
+  },
+  status: {
+    display: "inline-block",
+    padding: "5px 15px",
+    borderRadius: "5px",
+    fontSize: "14px",
+  },
+  pointsEarned: {
+    fontSize: "16px",
+    fontWeight: "bold",
+    color: "#333",
+    marginTop: "10px",
+  },
   viewBtn: {
     backgroundColor: "#007BFF",
     color: "white",
-    padding: "5px 10px",
+    padding: "10px 15px",
     border: "none",
     cursor: "pointer",
     borderRadius: "5px",
+    marginTop: "10px",
+    fontSize: "14px",
+    transition: "0.3s",
   },
 };
 

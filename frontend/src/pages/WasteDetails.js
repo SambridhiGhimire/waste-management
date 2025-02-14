@@ -63,36 +63,39 @@ const WasteDetails = () => {
   };
 
   if (loading) return <p>Loading...</p>;
-  console.log(report.imagePath);
 
   return (
     <div style={styles.container}>
-      <h2>Waste Report Details</h2>
+      <h2 style={styles.heading}>📍 Waste Report Details</h2>
       {report ? (
-        <>
+        <div style={styles.card}>
           <img src={`http://localhost:5000/${report.imagePath}`} alt="Waste" style={styles.image} />
-          <p>
-            <strong>Description:</strong> {report.description}
-          </p>
-          <p>
-            <strong>Status:</strong> <span style={getStatusStyle(report.status)}>{report.status}</span>
-          </p>
-          <p>
-            <strong>Reported by:</strong> {report.user.name} ({report.user.email})
-          </p>
 
-          {report.status !== "pending" && report.approvedBy && (
+          <div style={styles.info}>
             <p>
-              <strong>Approved/Rejected by:</strong> {report.approvedBy.name} ({report.approvedBy.email})
+              <strong>📖 Description:</strong> {report.description}
             </p>
-          )}
-
-          {report.status === "approved" && (
             <p>
-              <strong>Points Awarded:</strong> {report.pointsAwarded}
+              <strong>📌 Status:</strong> <span style={getStatusStyle(report.status)}>{report.status.toUpperCase()}</span>
             </p>
-          )}
+            <p>
+              <strong>👤 Reported by:</strong> {report.user.name} ({report.user.email})
+            </p>
 
+            {report.status !== "pending" && report.approvedBy && (
+              <p>
+                <strong>✅ Approved/Rejected by:</strong> {report.approvedBy.name} ({report.approvedBy.email})
+              </p>
+            )}
+
+            {report.status === "approved" && (
+              <p>
+                <strong>🎖 Points Awarded:</strong> {report.pointsAwarded}
+              </p>
+            )}
+          </div>
+
+          <p style={styles.mapText}>🗺 Waste Location:</p>
           <MapContainer center={[report.location.lat, report.location.lng]} zoom={15} style={styles.map}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             <Marker position={[report.location.lat, report.location.lng]} icon={markerIcon} />
@@ -100,16 +103,16 @@ const WasteDetails = () => {
 
           {user && user.role === "admin" && report.status === "pending" && (
             <div style={styles.adminActions}>
-              <input type="number" placeholder="Enter points" min="0" onChange={(e) => setPoints(e.target.value)} style={styles.input} />
+              <input type="number" placeholder="Assign points" min="0" onChange={(e) => setPoints(e.target.value)} style={styles.input} />
               <button onClick={approveReport} style={styles.approveBtn}>
-                Approve
+                ✅ Approve
               </button>
               <button onClick={rejectReport} style={styles.rejectBtn}>
-                Reject
+                ❌ Reject
               </button>
             </div>
           )}
-        </>
+        </div>
       ) : (
         <p>Report not found.</p>
       )}
@@ -117,27 +120,59 @@ const WasteDetails = () => {
   );
 };
 
+// Dynamic status styles
 const getStatusStyle = (status) => ({
-  color: status === "approved" ? "green" : status === "rejected" ? "red" : "orange",
+  backgroundColor: status === "approved" ? "#28a745" : status === "rejected" ? "#dc3545" : "#ffc107",
+  color: "white",
+  padding: "5px 10px",
+  borderRadius: "5px",
   fontWeight: "bold",
 });
 
 const styles = {
   container: {
+    padding: "30px",
+    textAlign: "center",
+    backgroundColor: "#f4f4f4",
+    minHeight: "100vh",
+  },
+  heading: {
+    fontSize: "24px",
+    fontWeight: "bold",
+    marginBottom: "20px",
+    color: "#333",
+  },
+  card: {
+    backgroundColor: "white",
     padding: "20px",
+    borderRadius: "10px",
+    boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
+    maxWidth: "600px",
+    margin: "auto",
     textAlign: "center",
   },
   image: {
     width: "100%",
     maxWidth: "500px",
     borderRadius: "10px",
-    margin: "10px 0",
+    marginBottom: "10px",
+    boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
+  },
+  info: {
+    textAlign: "left",
+    padding: "10px 0",
+  },
+  mapText: {
+    fontSize: "16px",
+    fontWeight: "bold",
+    marginTop: "20px",
+    color: "#444",
   },
   map: {
     width: "100%",
-    height: "400px",
-    maxWidth: "600px",
-    margin: "20px 0",
+    height: "300px",
+    borderRadius: "10px",
+    marginBottom: "20px",
   },
   adminActions: {
     marginTop: "20px",
@@ -148,24 +183,28 @@ const styles = {
   },
   input: {
     padding: "10px",
-    width: "100px",
+    width: "120px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
     textAlign: "center",
   },
   approveBtn: {
-    backgroundColor: "green",
+    backgroundColor: "#28a745",
     color: "white",
-    padding: "10px",
+    padding: "10px 15px",
     border: "none",
     cursor: "pointer",
     borderRadius: "5px",
+    fontSize: "14px",
   },
   rejectBtn: {
-    backgroundColor: "red",
+    backgroundColor: "#dc3545",
     color: "white",
-    padding: "10px",
+    padding: "10px 15px",
     border: "none",
     cursor: "pointer",
     borderRadius: "5px",
+    fontSize: "14px",
   },
 };
 
