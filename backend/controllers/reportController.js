@@ -1,4 +1,5 @@
 const WasteReport = require("../models/WasteReport");
+const User = require("../models/User");
 
 // Submit Waste Report
 const submitReport = async (req, res) => {
@@ -29,6 +30,7 @@ const getAllReports = async (req, res) => {
   try {
     const reports = await WasteReport.find().populate("user", "name email");
     res.json(reports);
+    console.log(reports);
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }

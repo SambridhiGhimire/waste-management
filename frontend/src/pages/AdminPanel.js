@@ -30,7 +30,6 @@ const AdminPanel = () => {
   const approveReport = async (id) => {
     try {
       const res = await axios.patch(`http://localhost:5000/api/reports/${id}/approve`, { points: points[id] || 0 }, { withCredentials: true });
-
       setReports((prevReports) => prevReports.map((report) => (report._id === id ? { ...report, status: "approved", pointsAwarded: points[id] || 0 } : report)));
       alert(res.data.message);
     } catch (error) {
