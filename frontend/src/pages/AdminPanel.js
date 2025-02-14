@@ -61,6 +61,7 @@ const AdminPanel = () => {
               <th>Status</th>
               <th>Points</th>
               <th>Actions</th>
+              <th>View</th>
             </tr>
           </thead>
           <tbody>
@@ -86,6 +87,11 @@ const AdminPanel = () => {
                       </button>
                     </>
                   )}
+                </td>
+                <td>
+                  <button onClick={() => navigate(`/waste/${report._id}`)} style={styles.viewBtn}>
+                    View Details
+                  </button>
                 </td>
               </tr>
             ))}
@@ -119,6 +125,14 @@ const styles = {
   rejectBtn: {
     backgroundColor: "red",
     color: "white",
+  },
+  viewBtn: {
+    backgroundColor: "#007BFF",
+    color: "white",
+    padding: "5px 10px",
+    border: "none",
+    cursor: "pointer",
+    borderRadius: "5px",
   },
 };
 

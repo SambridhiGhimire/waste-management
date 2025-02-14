@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
   const [reports, setReports] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -51,6 +52,7 @@ const Dashboard = () => {
               <th>Description</th>
               <th>Status</th>
               <th>Points Earned</th>
+              <th>View</th>
             </tr>
           </thead>
           <tbody>
@@ -59,6 +61,11 @@ const Dashboard = () => {
                 <td>{report.description}</td>
                 <td style={getStatusStyle(report.status)}>{report.status}</td>
                 <td>{report.status === "approved" ? `+${report.pointsAwarded} points` : "-"}</td>
+                <td>
+                  <button onClick={() => navigate(`/waste/${report._id}`)} style={styles.viewBtn}>
+                    View Details
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -114,6 +121,15 @@ const styles = {
   tableCell: {
     border: "1px solid #ccc",
     padding: "10px",
+  },
+
+  viewBtn: {
+    backgroundColor: "#007BFF",
+    color: "white",
+    padding: "5px 10px",
+    border: "none",
+    cursor: "pointer",
+    borderRadius: "5px",
   },
 };
 

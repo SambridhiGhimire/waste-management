@@ -63,13 +63,14 @@ const WasteDetails = () => {
   };
 
   if (loading) return <p>Loading...</p>;
+  console.log(report.imagePath);
 
   return (
     <div style={styles.container}>
       <h2>Waste Report Details</h2>
       {report ? (
         <>
-          <img src={`http://localhost:5000/uploads/${report.imagePath}`} alt="Waste" style={styles.image} />
+          <img src={`http://localhost:5000/${report.imagePath}`} alt="Waste" style={styles.image} />
           <p>
             <strong>Description:</strong> {report.description}
           </p>
