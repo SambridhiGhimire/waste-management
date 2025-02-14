@@ -11,6 +11,7 @@ const WasteReportSchema = new mongoose.Schema(
       enum: ["pending", "approved", "rejected"],
       default: "pending",
     },
+    pointsAwarded: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
