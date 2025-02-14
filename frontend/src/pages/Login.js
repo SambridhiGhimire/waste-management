@@ -1,13 +1,16 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { user, loginWithGoogle } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  if (user) {
-    return <Navigate to="/dashboard" />;
-  }
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard"); // Redirect after login
+    }
+  }, [user, navigate]);
 
   return (
     <div style={styles.container}>
