@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import ReportWaste from "./pages/ReportWaste";
 import AdminPanel from "./pages/AdminPanel";
+import WasteDetails from "./pages/WasteDetails";
 import Navbar from "./components/Navbar";
 import { AuthProvider } from "./context/AuthContext";
 
@@ -16,6 +17,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/report" element={<ReportWaste />} />
           <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/waste/:id" element={<WasteDetails />} />
         </Routes>
       </AuthProvider>
     </Router>

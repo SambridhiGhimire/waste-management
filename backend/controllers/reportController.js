@@ -30,7 +30,6 @@ const getAllReports = async (req, res) => {
   try {
     const reports = await WasteReport.find().populate("user", "name email");
     res.json(reports);
-    console.log(reports);
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }
@@ -41,24 +40,27 @@ const approveReport = async (req, res) => {
   const { points } = req.body;
 
   try {
-    const report = await WasteReport.findById(req.params.id);
+    const report = await WasteReport.findById(req.params.id).populate("user");
     if (!report) return res.status(404).json({ error: "Report not found" });
 
-    if (report.status === "approved") {
-      return res.status(400).json({ error: "Report already approved" });
+    if (report.status !== "pending") {
+      return res.status(400).json({ error: "Report is already processed" });
     }
 
     report.status = "approved";
     report.pointsAwarded = points || 0;
+    report.approvedBy = req.user.id;
     await report.save();
 
-    const user = await User.findById(report.user);
-    if (user) {
-      user.points += report.pointsAwarded;
-      await user.save();
+    if (report.user) {
+      report.user.points += report.pointsAwarded;
+      await report.user.save();
     }
 
-    res.json({ message: `Report approved with ${report.pointsAwarded} points!`, report });
+    res.json({
+      message: `Report approved with ${report.pointsAwarded} points!`,
+      report,
+    });
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }
@@ -70,8 +72,13 @@ const rejectReport = async (req, res) => {
     const report = await WasteReport.findById(req.params.id);
     if (!report) return res.status(404).json({ error: "Report not found" });
 
+    if (report.status !== "pending") {
+      return res.status(400).json({ error: "Report is already processed" });
+    }
+
     report.status = "rejected";
     report.pointsAwarded = 0;
+    report.approvedBy = req.user.id;
     await report.save();
 
     res.json({ message: "Report rejected!", report });
@@ -90,4 +97,16 @@ const getUserReports = async (req, res) => {
   }
 };
 
-module.exports = { submitReport, getAllReports, approveReport, rejectReport, getUserReports };
+const getReport = async (req, res) => {
+  try {
+    const report = await WasteReport.findById(req.params.id).populate("user", "name email").populate("approvedBy", "name email");
+
+    if (!report) return res.status(404).json({ error: "Report not found" });
+
+    res.json(report);
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+module.exports = { submitReport, getAllReports, approveReport, rejectReport, getUserReports, getReport };

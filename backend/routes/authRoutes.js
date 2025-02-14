@@ -19,7 +19,7 @@ router.get("/me", (req, res) => {
 router.get("/logout", (req, res) => {
   res.clearCookie("token");
   req.logout(() => {
-    res.redirect("http://localhost:3000/");
+    res.status(200).json({ message: "Logged Out" });
   });
 });
 
