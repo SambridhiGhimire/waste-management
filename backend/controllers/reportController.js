@@ -2,14 +2,18 @@ const WasteReport = require("../models/WasteReport");
 
 // Submit Waste Report
 const submitReport = async (req, res) => {
-  const { location, description, imageUrl } = req.body;
+  const { location, description } = req.body;
+
+  if (!req.file) {
+    return res.status(400).json({ error: "Image file is required" });
+  }
 
   try {
     const newReport = new WasteReport({
       user: req.user.id,
-      location,
+      location: JSON.parse(location),
       description,
-      imageUrl,
+      imagePath: req.file.path,
       status: "pending",
     });
 

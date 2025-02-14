@@ -18,6 +18,9 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/reports", reportRoutes);
 
+// Serve static files (uploaded images)
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // Error Middleware
 app.use(errorHandler);
 
