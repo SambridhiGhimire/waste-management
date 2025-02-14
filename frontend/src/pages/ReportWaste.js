@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import L from "leaflet";
 
 const ReportWaste = () => {
   const [description, setDescription] = useState("");
@@ -9,13 +10,23 @@ const ReportWaste = () => {
   const [location, setLocation] = useState({ lat: 27.7172, lng: 85.324 }); // Default: Kathmandu
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const markerIcon = new L.Icon({
+    iconUrl: require("leaflet/dist/images/marker-icon.png"),
+    iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+    shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+    iconSize: [25, 41], // Default size
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  });
+
   const LocationMarker = () => {
     useMapEvents({
       click(e) {
         setLocation({ lat: e.latlng.lat, lng: e.latlng.lng });
       },
     });
-    return <Marker position={location} />;
+    return <Marker position={location} icon={markerIcon} />;
   };
 
   // Handle form submission
