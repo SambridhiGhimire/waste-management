@@ -24,9 +24,15 @@ const Dashboard = () => {
     return <p>Loading...</p>;
   }
 
+  console.log(user);
+
   return (
     <div style={styles.container}>
-      <h2 style={styles.heading}>Welcome, {user.name}! 🎉</h2>
+      <div style={styles.profileSection}>
+        {user.profileImage && <img src={user.profileImage} alt="Profile" style={styles.profileImage} />}
+        <h2 style={styles.heading}>Welcome, {user.name}! 🎉</h2>
+      </div>
+
       <p style={styles.points}>
         Your current reward points: <strong>{user.points}</strong>
       </p>
@@ -81,6 +87,20 @@ const styles = {
     padding: "30px",
     backgroundColor: "#f4f4f4",
     minHeight: "100vh",
+  },
+  profileSection: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    marginBottom: "20px",
+  },
+  profileImage: {
+    width: "100px",
+    height: "100px",
+    borderRadius: "50%",
+    objectFit: "cover",
+    marginBottom: "10px",
+    border: "2px solid #007BFF",
   },
   heading: {
     fontSize: "24px",

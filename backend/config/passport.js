@@ -20,12 +20,21 @@ passport.use(
             name: profile.displayName,
             email: profile.emails[0].value,
             googleId: profile.id,
+            profileImage: profile.photos[0].value,
           });
           await user.save();
         }
 
+        // Update profile image if changed
+        if (user.profileImage !== profile.photos[0].value) {
+          user.profileImage = profile.photos[0].value;
+          await user.save();
+        }
+
         // Generate JWT token
-        const token = jwt.sign({ id: user._id, name: user.name, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+        const token = jwt.sign({ id: user._id, name: user.name, email: user.email, role: user.role, profileImage: user.profileImage }, process.env.JWT_SECRET, {
+          expiresIn: process.env.JWT_EXPIRES_IN,
+        });
 
         return done(null, { user, token });
       } catch (error) {

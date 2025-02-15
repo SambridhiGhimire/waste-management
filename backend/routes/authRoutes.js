@@ -13,7 +13,16 @@ router.get("/me", (req, res) => {
   if (!req.user) {
     return res.status(401).json({ error: "Not authenticated" });
   }
-  res.json({ user: req.user.user, token: req.user.token });
+  res.json({
+    user: {
+      name: req.user.user.name,
+      email: req.user.user.email,
+      profileImage: req.user.user.profileImage,
+      role: req.user.user.role,
+      points: req.user.user.points,
+    },
+    token: req.user.token,
+  });
 });
 
 router.get("/logout", (req, res) => {
