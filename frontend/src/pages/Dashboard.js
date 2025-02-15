@@ -50,6 +50,9 @@ const Dashboard = () => {
           {reports.map((report) => (
             <div key={report._id} style={styles.card}>
               <p style={styles.description}>{report.description}</p>
+              <p style={styles.wasteType}>
+                ♻ <strong>Type:</strong> {report.wasteType}
+              </p>
               <p style={{ ...styles.status, ...getStatusStyle(report.status) }}>{report.status.toUpperCase()}</p>
               <p style={styles.pointsEarned}>{report.status !== "pending" ? `🎖 +${report.pointsAwarded} points` : "⏳ Pending Review"}</p>
               <button onClick={() => navigate(`/waste/${report._id}`)} style={styles.viewBtn}>
@@ -143,6 +146,12 @@ const styles = {
     fontWeight: "bold",
     color: "#333",
     marginBottom: "10px",
+  },
+  wasteType: {
+    fontSize: "14px",
+    fontWeight: "bold",
+    color: "#555",
+    marginBottom: "8px",
   },
   status: {
     display: "inline-block",

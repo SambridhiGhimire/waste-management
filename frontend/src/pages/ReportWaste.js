@@ -4,8 +4,11 @@ import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
+const wasteTypes = ["E-waste", "Paper waste", "Metal waste", "Plastic waste", "Stationary waste", "Organic waste", "Others"];
+
 const ReportWaste = () => {
   const [description, setDescription] = useState("");
+  const [wasteType, setWasteType] = useState("");
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [location, setLocation] = useState({ lat: 27.7172, lng: 85.324 }); // Default: Kathmandu
@@ -46,6 +49,7 @@ const ReportWaste = () => {
 
     const formData = new FormData();
     formData.append("description", description);
+    formData.append("wasteType", wasteType);
     formData.append("location", JSON.stringify(location));
     formData.append("image", image);
 
@@ -56,6 +60,7 @@ const ReportWaste = () => {
       });
       alert("Waste report submitted successfully!");
       setDescription("");
+      setWasteType("");
       setImage(null);
       setPreview(null);
     } catch (error) {
@@ -73,6 +78,15 @@ const ReportWaste = () => {
 
       <form onSubmit={handleSubmit} style={styles.form}>
         <input type="text" placeholder="📝 Describe the waste issue..." value={description} onChange={(e) => setDescription(e.target.value)} required style={styles.input} />
+
+        <select value={wasteType} onChange={(e) => setWasteType(e.target.value)} required style={styles.input}>
+          <option value="">📂 Select Waste Type</option>
+          {wasteTypes.map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
+        </select>
 
         <label htmlFor="fileUpload" style={styles.fileLabel}>
           📷 Upload an Image

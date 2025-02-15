@@ -76,6 +76,9 @@ const WasteDetails = () => {
               <strong>📖 Description:</strong> {report.description}
             </p>
             <p>
+              <strong>♻ Waste Type:</strong> {report.wasteType}
+            </p>
+            <p>
               <strong>📌 Status:</strong> <span style={getStatusStyle(report.status)}>{report.status.toUpperCase()}</span>
             </p>
             <p>

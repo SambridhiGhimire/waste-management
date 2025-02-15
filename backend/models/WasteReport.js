@@ -9,6 +9,11 @@ const WasteReportSchema = new mongoose.Schema(
       lng: { type: Number, required: true },
     },
     description: { type: String, required: true },
+    wasteType: {
+      type: String,
+      enum: ["E-waste", "Paper waste", "Metal waste", "Plastic waste", "Stationary waste", "Organic waste", "Others"],
+      required: true,
+    },
     imagePath: { type: String, required: true },
     status: {
       type: String,

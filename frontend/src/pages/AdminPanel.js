@@ -59,6 +59,10 @@ const AdminPanel = () => {
               <p style={styles.description}>{report.description}</p>
               <p style={{ ...styles.status, ...getStatusStyle(report.status) }}>{report.status.toUpperCase()}</p>
 
+              <p style={styles.wasteType}>
+                ♻ <strong>Type:</strong> {report.wasteType}
+              </p>
+
               <div style={styles.pointsSection}>
                 {report.status !== "pending" ? (
                   <p style={styles.pointsAwarded}>🎖 {report.pointsAwarded} Points</p>
@@ -90,6 +94,7 @@ const AdminPanel = () => {
   );
 };
 
+// Dynamic status styling
 const getStatusStyle = (status) => ({
   backgroundColor: status === "approved" ? "#28a745" : status === "rejected" ? "#dc3545" : "#ffc107",
   color: "white",
@@ -139,6 +144,12 @@ const styles = {
     padding: "5px 15px",
     borderRadius: "5px",
     fontSize: "14px",
+  },
+  wasteType: {
+    fontSize: "14px",
+    fontWeight: "bold",
+    color: "#555",
+    marginBottom: "8px",
   },
   pointsSection: {
     marginTop: "10px",
