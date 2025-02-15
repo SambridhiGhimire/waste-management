@@ -41,12 +41,18 @@ const Navbar = () => {
 
 const styles = {
   navbar: {
+    position: "fixed",
+    top: "0",
+    left: "0",
+    width: "100%",
+    zIndex: "1001",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     padding: "10px 20px",
     backgroundColor: "#333",
     color: "white",
+    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
   },
   logo: {
     fontSize: "20px",
@@ -70,6 +76,7 @@ const styles = {
     border: "none",
     padding: "5px 10px",
     cursor: "pointer",
+    borderRadius: "4px",
   },
 };
 
