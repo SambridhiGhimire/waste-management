@@ -24,8 +24,6 @@ const Dashboard = () => {
     return <p>Loading...</p>;
   }
 
-  console.log(user);
-
   return (
     <div style={styles.container}>
       <div style={styles.profileSection}>
