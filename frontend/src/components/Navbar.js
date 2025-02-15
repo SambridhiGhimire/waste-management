@@ -50,15 +50,15 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "center",
     padding: "10px 20px",
-    backgroundColor: "#333",
-    color: "white",
-    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+    backgroundColor: "#FFF",
+    color: "black",
+    borderBottom: "1px solid black",
   },
   logo: {
     fontSize: "20px",
     fontWeight: "bold",
     textDecoration: "none",
-    color: "white",
+    color: "black",
   },
   links: {
     display: "flex",
@@ -66,7 +66,7 @@ const styles = {
     gap: "15px",
   },
   link: {
-    color: "white",
+    color: "black",
     textDecoration: "none",
     fontSize: "16px",
   },

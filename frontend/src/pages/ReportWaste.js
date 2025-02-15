@@ -33,7 +33,6 @@ const ReportWaste = () => {
     return <Marker position={location} icon={markerIcon} />;
   };
 
-  // Handle image preview
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImage(file);
@@ -42,7 +41,6 @@ const ReportWaste = () => {
     }
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -73,14 +71,14 @@ const ReportWaste = () => {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.heading}>📍 Report Waste</h2>
+      <h2 style={styles.heading}>Report Waste</h2>
       <p style={styles.subtext}>Help keep the environment clean by reporting waste in your area.</p>
 
       <form onSubmit={handleSubmit} style={styles.form}>
-        <input type="text" placeholder="📝 Describe the waste issue..." value={description} onChange={(e) => setDescription(e.target.value)} required style={styles.input} />
+        <input type="text" placeholder="Describe the waste issue..." value={description} onChange={(e) => setDescription(e.target.value)} required style={styles.input} />
 
         <select value={wasteType} onChange={(e) => setWasteType(e.target.value)} required style={styles.input}>
-          <option value="">📂 Select Waste Type</option>
+          <option value="">Select Waste Type</option>
           {wasteTypes.map((type) => (
             <option key={type} value={type}>
               {type}
@@ -89,40 +87,40 @@ const ReportWaste = () => {
         </select>
 
         <label htmlFor="fileUpload" style={styles.fileLabel}>
-          📷 Upload an Image
+          Upload an Image
         </label>
         <input type="file" id="fileUpload" accept="image/*" onChange={handleImageChange} required style={styles.fileInput} />
 
-        {/* Preview uploaded image */}
         {preview && <img src={preview} alt="Preview" style={styles.preview} />}
 
-        <p style={styles.mapInstructions}>🗺 Click on the map to pinpoint waste location.</p>
+        <p style={styles.mapInstructions}>Click on the map to pinpoint waste location.</p>
         <MapContainer center={location} zoom={12} style={styles.map}>
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           <LocationMarker />
         </MapContainer>
 
         <button type="submit" disabled={isSubmitting} style={styles.button}>
-          {isSubmitting ? "🚀 Submitting..." : "✅ Submit Report"}
+          {isSubmitting ? "Submitting..." : "Submit Report"}
         </button>
       </form>
     </div>
   );
 };
 
-// Styles
 const styles = {
   container: {
-    padding: "30px",
-    textAlign: "center",
-    backgroundColor: "#f4f4f4",
-    minHeight: "100vh",
+    maxWidth: "600px",
+    margin: "60px auto",
+    padding: "20px",
+    backgroundColor: "#fff",
+    borderRadius: "12px",
+    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
   },
   heading: {
     fontSize: "24px",
     fontWeight: "bold",
+    color: "#1a3025",
     marginBottom: "10px",
-    color: "#333",
   },
   subtext: {
     fontSize: "16px",
@@ -132,35 +130,31 @@ const styles = {
   form: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
     gap: "15px",
   },
   input: {
     padding: "12px",
-    width: "100%",
-    maxWidth: "400px",
     borderRadius: "8px",
     border: "1px solid #ccc",
     fontSize: "16px",
   },
   fileLabel: {
     padding: "10px 15px",
-    backgroundColor: "#007BFF",
+    backgroundColor: "#2e7d32",
     color: "white",
     borderRadius: "5px",
     cursor: "pointer",
     fontSize: "16px",
+    textAlign: "center",
   },
   fileInput: {
     display: "none",
   },
   preview: {
     width: "100%",
-    maxWidth: "400px",
     height: "auto",
+    borderRadius: "8px",
     marginTop: "10px",
-    borderRadius: "10px",
-    boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
   },
   mapInstructions: {
     fontSize: "14px",
@@ -168,19 +162,17 @@ const styles = {
   },
   map: {
     width: "100%",
-    height: "400px",
-    maxWidth: "600px",
-    margin: "20px 0",
-    borderRadius: "10px",
+    height: "300px",
+    borderRadius: "8px",
   },
   button: {
-    padding: "12px 20px",
-    backgroundColor: "#4CAF50",
+    padding: "12px",
+    backgroundColor: "#2e7d32",
     color: "white",
     border: "none",
-    cursor: "pointer",
     borderRadius: "8px",
     fontSize: "16px",
+    cursor: "pointer",
     transition: "0.3s",
   },
 };

@@ -1,12 +1,13 @@
 import { useEffect, useState, useContext } from "react";
-import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const AdminPanel = () => {
   const { user } = useContext(AuthContext);
   const [reports, setReports] = useState([]);
   const [points, setPoints] = useState({});
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,159 +48,386 @@ const AdminPanel = () => {
     }
   };
 
+  if (!user) {
+    return <div style={styles.loading}>Loading...</div>;
+  }
+
   return (
-    <div style={styles.container}>
-      <h2 style={styles.heading}>Admin Panel - Manage Reports</h2>
-      {reports.length === 0 ? (
-        <p style={styles.noReports}>No reports available.</p>
-      ) : (
-        <div style={styles.grid}>
-          {reports.map((report) => (
-            <div key={report._id} style={styles.card}>
-              <p style={styles.description}>{report.description}</p>
-              <p style={{ ...styles.status, ...getStatusStyle(report.status) }}>{report.status.toUpperCase()}</p>
+    <div style={styles.wrapper}>
+      <button style={styles.mobileMenuButton} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+        ☰
+      </button>
 
-              <p style={styles.wasteType}>
-                ♻ <strong>Type:</strong> {report.wasteType}
-              </p>
-
-              <div style={styles.pointsSection}>
-                {report.status !== "pending" ? (
-                  <p style={styles.pointsAwarded}>🎖 {report.pointsAwarded} Points</p>
-                ) : (
-                  <input type="number" min="0" onChange={(e) => setPoints({ ...points, [report._id]: e.target.value })} placeholder="Assign points" style={styles.input} />
-                )}
-              </div>
-
-              <div style={styles.actions}>
-                {report.status === "pending" && (
-                  <>
-                    <button onClick={() => approveReport(report._id)} style={styles.approveBtn}>
-                      ✅ Approve
-                    </button>
-                    <button onClick={() => rejectReport(report._id)} style={styles.rejectBtn}>
-                      ❌ Reject
-                    </button>
-                  </>
-                )}
-                <button onClick={() => navigate(`/waste/${report._id}`)} style={styles.viewBtn}>
-                  🔍 View Details
-                </button>
-              </div>
-            </div>
-          ))}
+      <div
+        style={{
+          ...styles.sidebar,
+          ...(isMobileMenuOpen ? styles.sidebarMobileOpen : styles.sidebarMobileClosed),
+        }}
+      >
+        <div style={styles.profileSection}>
+          {user.profileImage ? <img src={user.profileImage} alt="Profile" style={styles.profileImage} /> : <div style={styles.profileInitial}>{user.name.charAt(0)}</div>}
+          <div style={styles.profileInfo}>
+            <h2 style={styles.profileName}>{user.name}</h2>
+            <div style={styles.adminBadge}>Admin</div>
+          </div>
         </div>
-      )}
+      </div>
+
+      <div style={styles.mainContent}>
+        <div style={styles.header}>
+          <h1 style={styles.mainHeading}>Admin Control Panel</h1>
+          <div style={styles.statsContainer}>
+            <div style={styles.statCard}>
+              <span style={styles.statValue}>{reports.length}</span>
+              <span style={styles.statLabel}>Total Reports</span>
+            </div>
+            <div style={styles.statCard}>
+              <span style={styles.statValue}>{reports.filter((r) => r.status === "approved").length}</span>
+              <span style={styles.statLabel}>Approved</span>
+            </div>
+            <div style={styles.statCard}>
+              <span style={styles.statValue}>{reports.filter((r) => r.status === "pending").length}</span>
+              <span style={styles.statLabel}>Pending</span>
+            </div>
+          </div>
+        </div>
+
+        <div style={styles.reportsSection}>
+          <h2 style={styles.sectionHeading}>Manage Reports</h2>
+          {reports.length === 0 ? (
+            <div style={styles.emptyState}>
+              <p style={styles.emptyStateText}>No reports to review.</p>
+            </div>
+          ) : (
+            <div style={styles.grid}>
+              {reports.map((report) => (
+                <div key={report._id} style={styles.reportCard}>
+                  <div style={styles.cardHeader}>
+                    <span style={{ ...styles.statusBadge, ...getStatusStyle(report.status) }}>{report.status.toUpperCase()}</span>
+                    <span style={styles.wasteType}>{report.wasteType}</span>
+                  </div>
+                  <p style={styles.reportDescription}>{report.description}</p>
+                  {report.status === "pending" && (
+                    <div style={styles.pointsInput}>
+                      <input type="number" min="0" onChange={(e) => setPoints({ ...points, [report._id]: e.target.value })} placeholder="Assign points" style={styles.input} />
+                    </div>
+                  )}
+                  <div style={styles.cardFooter}>
+                    {report.status === "pending" ? (
+                      <div style={styles.actionButtons}>
+                        <button onClick={() => approveReport(report._id)} style={styles.approveButton}>
+                          Approve
+                        </button>
+                        <button onClick={() => rejectReport(report._id)} style={styles.rejectButton}>
+                          Reject
+                        </button>
+                      </div>
+                    ) : (
+                      <div style={styles.pointsAwarded}>+{report.pointsAwarded} points awarded</div>
+                    )}
+                    <button onClick={() => navigate(`/waste/${report._id}`)} style={styles.viewButton}>
+                      View Details
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
 
-// Dynamic status styling
+export default AdminPanel;
 const getStatusStyle = (status) => ({
-  backgroundColor: status === "approved" ? "#28a745" : status === "rejected" ? "#dc3545" : "#ffc107",
-  color: "white",
-  padding: "5px 10px",
-  borderRadius: "5px",
-  fontWeight: "bold",
+  backgroundColor: status === "approved" ? "#e6f4ea" : status === "rejected" ? "#fce8e8" : "#fff4e5",
+  color: status === "approved" ? "#137333" : status === "rejected" ? "#a50e0e" : "#b93815",
 });
 
 const styles = {
-  container: {
-    padding: "30px",
-    textAlign: "center",
-    backgroundColor: "#f4f4f4",
+  wrapper: {
+    display: "flex",
     minHeight: "100vh",
+    backgroundColor: "#f8fafb",
+    position: "relative",
+    paddingTop: "40px",
   },
-  heading: {
-    fontSize: "24px",
-    fontWeight: "bold",
-    marginBottom: "20px",
-    color: "#333",
+  sidebar: {
+    width: "280px",
+    backgroundColor: "white",
+    borderRight: "1px solid #e1e5ea",
+    padding: "28px",
+    display: "flex",
+    flexDirection: "column",
+    position: "fixed",
+    height: "100vh",
+    top: 0,
+    left: 0,
+    overflowY: "auto",
+    zIndex: 1000,
+    transition: "transform 0.3s ease-in-out",
   },
-  noReports: {
-    fontSize: "18px",
-    color: "#666",
+  sidebarMobileOpen: {
+    transform: "translateX(0)",
+  },
+  sidebarMobileClosed: {
+    "@media (max-width: 768px)": {
+      transform: "translateX(-100%)",
+    },
+  },
+  mainContent: {
+    flex: 1,
+    marginLeft: "300px",
+    padding: "32px 40px",
+    "@media (max-width: 768px)": {
+      marginLeft: 0,
+      padding: "20px",
+    },
+  },
+  mobileMenuButton: {
+    display: "none",
+    "@media (max-width: 768px)": {
+      display: "block",
+      position: "fixed",
+      top: "20px",
+      left: "20px",
+      zIndex: 1001,
+      padding: "8px 12px",
+      fontSize: "24px",
+      backgroundColor: "#ef4444",
+      color: "white",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+    },
+  },
+  profileSection: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    marginBottom: "32px",
+    marginTop: "48px",
+  },
+  profileImage: {
+    width: "90px",
+    height: "90px",
+    borderRadius: "50%",
+    objectFit: "cover",
+    marginBottom: "16px",
+    border: "3px solid #fee2e2",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+  },
+  profileInitial: {
+    width: "90px",
+    height: "90px",
+    borderRadius: "50%",
+    backgroundColor: "#fee2e2",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "32px",
+    fontWeight: "500",
+    color: "#ef4444",
+    marginBottom: "16px",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+  },
+  profileInfo: {
+    textAlign: "center",
+  },
+  profileName: {
+    fontSize: "20px",
+    fontWeight: "600",
+    color: "#1a3025",
+    marginBottom: "12px",
+  },
+  adminBadge: {
+    backgroundColor: "#fee2e2",
+    color: "#ef4444",
+    padding: "6px 12px",
+    borderRadius: "20px",
+    fontSize: "14px",
+    fontWeight: "600",
+    display: "inline-block",
+  },
+  header: {
+    marginBottom: "36px",
+  },
+  mainHeading: {
+    fontSize: "28px",
+    fontWeight: "600",
+    color: "#1a3025",
+    marginBottom: "28px",
+  },
+  statsContainer: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: "24px",
+    marginBottom: "36px",
+    "@media (max-width: 1024px)": {
+      gridTemplateColumns: "repeat(2, 1fr)",
+    },
+    "@media (max-width: 640px)": {
+      gridTemplateColumns: "1fr",
+    },
+  },
+  statCard: {
+    backgroundColor: "white",
+    padding: "24px",
+    borderRadius: "12px",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    border: "1px solid #fee2e2",
+  },
+  statValue: {
+    fontSize: "32px",
+    fontWeight: "600",
+    color: "#ef4444",
+    marginBottom: "8px",
+  },
+  statLabel: {
+    fontSize: "15px",
+    color: "#4a5568",
+    fontWeight: "500",
+  },
+  reportsSection: {
+    backgroundColor: "white",
+    borderRadius: "16px",
+    padding: "32px",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+    border: "1px solid #fee2e2",
+  },
+  sectionHeading: {
+    fontSize: "20px",
+    fontWeight: "600",
+    color: "#1a3025",
+    marginBottom: "28px",
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(500px, 1fr))",
-    gap: "20px",
-    marginTop: "20px",
+    gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+    gap: "24px",
+    "@media (max-width: 640px)": {
+      gridTemplateColumns: "1fr",
+    },
   },
-  card: {
+  reportCard: {
     backgroundColor: "white",
+    borderRadius: "12px",
+    border: "1px solid #fee2e2",
     padding: "20px",
-    borderRadius: "10px",
-    boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
-    textAlign: "center",
+    transition: "all 0.2s ease",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
   },
-  description: {
-    fontSize: "16px",
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: "10px",
+  cardHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "16px",
   },
-  status: {
-    display: "inline-block",
-    padding: "5px 15px",
-    borderRadius: "5px",
-    fontSize: "14px",
+  statusBadge: {
+    padding: "6px 12px",
+    borderRadius: "6px",
+    fontSize: "12px",
+    fontWeight: "600",
+    letterSpacing: "0.5px",
   },
   wasteType: {
     fontSize: "14px",
-    fontWeight: "bold",
-    color: "#555",
-    marginBottom: "8px",
+    color: "#4a5568",
+    fontWeight: "500",
   },
-  pointsSection: {
-    marginTop: "10px",
+  reportDescription: {
+    fontSize: "14px",
+    color: "#2d3748",
+    marginBottom: "16px",
+    lineHeight: 1.6,
   },
-  pointsAwarded: {
-    fontSize: "16px",
-    fontWeight: "bold",
-    color: "#333",
+  pointsInput: {
+    marginBottom: "16px",
   },
   input: {
-    padding: "8px",
-    width: "110px",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
-    textAlign: "center",
+    width: "100%",
+    padding: "8px 12px",
+    borderRadius: "6px",
+    border: "1px solid #e1e5ea",
+    fontSize: "14px",
+    "&:focus": {
+      outline: "none",
+      borderColor: "#ef4444",
+    },
   },
-  actions: {
-    marginTop: "15px",
+  cardFooter: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: "16px",
+    paddingTop: "16px",
+    borderTop: "1px solid #fee2e2",
+  },
+  actionButtons: {
+    display: "flex",
+    gap: "8px",
+  },
+  approveButton: {
+    backgroundColor: "#2e7d32",
+    color: "white",
+    padding: "8px 16px",
+    borderRadius: "6px",
+    border: "none",
+    fontSize: "13px",
+    fontWeight: "500",
+    cursor: "pointer",
+    transition: "background-color 0.2s ease",
+  },
+  rejectButton: {
+    backgroundColor: "#ef4444",
+    color: "white",
+    padding: "8px 16px",
+    borderRadius: "6px",
+    border: "none",
+    fontSize: "13px",
+    fontWeight: "500",
+    cursor: "pointer",
+    transition: "background-color 0.2s ease",
+  },
+  viewButton: {
+    backgroundColor: "#f1f5f9",
+    color: "#475569",
+    padding: "8px 16px",
+    borderRadius: "6px",
+    border: "none",
+    fontSize: "13px",
+    fontWeight: "500",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+    "&:hover": {
+      backgroundColor: "#e2e8f0",
+      color: "#1e293b",
+    },
+  },
+  pointsAwarded: {
+    fontSize: "14px",
+    color: "#2e7d32",
+    fontWeight: "600",
+  },
+  emptyState: {
+    textAlign: "center",
+    padding: "48px 24px",
+  },
+  emptyStateText: {
+    color: "#4a5568",
+    marginBottom: "20px",
+    fontSize: "16px",
+  },
+  loading: {
     display: "flex",
     justifyContent: "center",
-    gap: "10px",
-    flexWrap: "wrap",
-  },
-  approveBtn: {
-    backgroundColor: "#28a745",
-    color: "white",
-    padding: "10px 15px",
-    border: "none",
-    cursor: "pointer",
-    borderRadius: "5px",
-    transition: "0.2s",
-  },
-  rejectBtn: {
-    backgroundColor: "#dc3545",
-    color: "white",
-    padding: "10px 15px",
-    border: "none",
-    cursor: "pointer",
-    borderRadius: "5px",
-    transition: "0.2s",
-  },
-  viewBtn: {
-    backgroundColor: "#007BFF",
-    color: "white",
-    padding: "10px 15px",
-    border: "none",
-    cursor: "pointer",
-    borderRadius: "5px",
-    transition: "0.2s",
+    alignItems: "center",
+    height: "100vh",
+    fontSize: "16px",
+    color: "#4a5568",
   },
 };
-
-export default AdminPanel;
