@@ -62,7 +62,6 @@ const styles = {
     padding: "10px 20px",
     backgroundColor: "#d4ede4",
     color: "black",
-    // borderBottom: "1px solid black",
   },
   logo: {
     fontSize: "20px",
