@@ -61,240 +61,68 @@ const WasteDetails = () => {
     }
   };
 
-  if (loading) return <div style={styles.loading}>Loading...</div>;
+  if (loading) return <div className="text-center text-lg text-gray-700">Loading...</div>;
 
   return (
-    <div style={styles.wasteDetailsContainer}>
-      <div style={styles.wasteDetailsCard}>
-        <h1 style={styles.wasteDetailsTitle}>Waste Report Details</h1>
-
+    <div className="flex justify-center items-center min-h-screen bg-[#e6f4ea] p-6 mt-12">
+      <div className="bg-white rounded-xl shadow-lg max-w-5xl w-full p-8">
+        <h1 className="text-2xl font-bold text-[#1a3025] text-center mb-6">Waste Report Details</h1>
         {report ? (
           <>
-            {/* Top Section: Image and Details Side by Side */}
-            <div style={styles.topSection}>
-              <div style={styles.wasteImageContainer}>
-                <img src={`http://localhost:5000/${report.imagePath}`} alt="Waste" style={styles.wasteImage} />
+            <div className="flex flex-col md:flex-row gap-6 mb-6">
+              <div className="flex-1">
+                <img src={`http://localhost:5000/${report.imagePath}`} alt="Waste" className="w-full h-auto rounded-lg" />
               </div>
-
-              <div style={styles.wasteInfo}>
-                <div style={styles.infoItem}>
-                  <span style={styles.infoLabel}>Description:</span>
-                  <span style={styles.infoValue}>{report.description}</span>
-                </div>
-                <div style={styles.infoItem}>
-                  <span style={styles.infoLabel}>Waste Type:</span>
-                  <span style={styles.infoValue}>{report.wasteType}</span>
-                </div>
-                <div style={styles.infoItem}>
-                  <span style={styles.infoLabel}>Status:</span>
-                  <span
-                    style={{
-                      ...styles.statusBadge,
-                      ...(report.status === "approved" ? styles.statusApproved : report.status === "rejected" ? styles.statusRejected : styles.statusPending),
-                    }}
-                  >
-                    {report.status.toUpperCase()}
-                  </span>
-                </div>
-                <div style={styles.infoItem}>
-                  <span style={styles.infoLabel}>Reported by:</span>
-                  <span style={styles.infoValue}>
-                    {report.user.name} ({report.user.email})
-                  </span>
-                </div>
-                {report.status !== "pending" && report.approvedBy && (
-                  <div style={styles.infoItem}>
-                    <span style={styles.infoLabel}>Approved/Rejected by:</span>
-                    <span style={styles.infoValue}>
-                      {report.approvedBy.name} ({report.approvedBy.email})
-                    </span>
-                  </div>
-                )}
-                {report.status === "approved" && (
-                  <div style={styles.infoItem}>
-                    <span style={styles.infoLabel}>Points Awarded:</span>
-                    <span style={styles.infoValue}>{report.pointsAwarded}</span>
-                  </div>
-                )}
+              <div className="flex-1 space-y-4">
+                <InfoItem label="Description" value={report.description} />
+                <InfoItem label="Waste Type" value={report.wasteType} />
+                <InfoItem label="Status" value={report.status.toUpperCase()} status={report.status} />
+                <InfoItem label="Reported by" value={`${report.user.name} (${report.user.email})`} />
+                {report.status !== "pending" && report.approvedBy && <InfoItem label="Approved/Rejected by" value={`${report.approvedBy.name} (${report.approvedBy.email})`} />}
+                {report.status === "approved" && <InfoItem label="Points Awarded" value={report.pointsAwarded} />}
               </div>
             </div>
 
-            {/* Bottom Section: Horizontal Map */}
-            <div style={styles.bottomSection}>
-              <h2 style={styles.locationTitle}>Waste Location</h2>
-              <MapContainer center={[report.location.lat, report.location.lng]} zoom={15} style={styles.map}>
+            <div className="w-full">
+              <h2 className="text-lg font-semibold text-[#1a3025] mb-3">Waste Location</h2>
+              <MapContainer center={[report.location.lat, report.location.lng]} zoom={15} className="w-full h-72 rounded-lg">
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 <Marker position={[report.location.lat, report.location.lng]} icon={markerIcon} />
               </MapContainer>
             </div>
 
-            {/* Admin Actions */}
             {user && user.role === "admin" && report.status === "pending" && (
-              <div style={styles.adminActions}>
-                <input type="number" placeholder="Assign points" min="0" onChange={(e) => setPoints(e.target.value)} style={styles.pointsInput} />
-                <button onClick={approveReport} style={{ ...styles.actionButton, ...styles.approveButton }}>
+              <div className="flex flex-col md:flex-row gap-4 mt-6">
+                <input type="number" placeholder="Assign points" min="0" onChange={(e) => setPoints(e.target.value)} className="p-3 border border-[#c8e6d5] rounded-md" />
+                <button onClick={approveReport} className="px-4 py-3 bg-[#2e7d32] text-white rounded-md font-medium hover:bg-[#1b5e20] transition">
                   Approve
                 </button>
-                <button onClick={rejectReport} style={{ ...styles.actionButton, ...styles.rejectButton }}>
+                <button onClick={rejectReport} className="px-4 py-3 bg-[#d32f2f] text-white rounded-md font-medium hover:bg-[#b71c1c] transition">
                   Reject
                 </button>
               </div>
             )}
           </>
         ) : (
-          <p style={styles.errorMessage}>Report not found.</p>
+          <p className="text-center text-red-500 text-lg">Report not found.</p>
         )}
       </div>
     </div>
   );
 };
 
-export default WasteDetails;
-const styles = {
-  wasteDetailsContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "100vh",
-    backgroundColor: "#e6f4ea", // Updated to match ReportWaste
-    padding: "20px",
-    marginTop: "50px",
-  },
-  wasteDetailsCard: {
-    backgroundColor: "#ffffff",
-    borderRadius: "12px",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-    maxWidth: "1200px",
-    width: "100%",
-    padding: "30px",
-  },
-  wasteDetailsTitle: {
-    fontSize: "24px",
-    fontWeight: "bold",
-    color: "#1a3025", // Updated to match ReportWaste
-    marginBottom: "20px",
-    textAlign: "center",
-  },
-  topSection: {
-    display: "flex",
-    gap: "30px",
-    marginBottom: "30px",
-  },
-  wasteImageContainer: {
-    flex: 1,
-    borderRadius: "12px",
-    overflow: "hidden",
-  },
-  wasteImage: {
-    width: "100%",
-    height: "auto",
-    borderRadius: "12px",
-  },
-  wasteInfo: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    gap: "12px",
-  },
-  infoItem: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-  },
-  infoLabel: {
-    fontWeight: "500",
-    color: "#4a5568", // Updated to match ReportWaste
-  },
-  infoValue: {
-    color: "#1a3025", // Updated to match ReportWaste
-  },
-  statusBadge: {
-    padding: "6px 12px",
-    borderRadius: "20px",
-    fontSize: "14px",
-    fontWeight: "500",
-    color: "#ffffff",
-  },
-  statusApproved: {
-    backgroundColor: "#2e7d32", // Updated to match ReportWaste
-  },
-  statusRejected: {
-    backgroundColor: "#d32f2f", // Updated to match ReportWaste
-  },
-  statusPending: {
-    backgroundColor: "#e65100", // Updated to match ReportWaste
-  },
-  bottomSection: {
-    width: "100%",
-  },
-  locationTitle: {
-    fontSize: "18px",
-    fontWeight: "600",
-    color: "#1a3025", // Updated to match ReportWaste
-    marginBottom: "10px",
-  },
-  map: {
-    width: "100%",
-    height: "300px",
-    borderRadius: "12px",
-  },
-  adminActions: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-    marginTop: "20px",
-  },
-  pointsInput: {
-    padding: "10px",
-    border: "1px solid #c8e6d5", // Updated to match ReportWaste
-    borderRadius: "8px",
-    fontSize: "16px",
-    outline: "none",
-  },
-  actionButton: {
-    padding: "12px",
-    border: "none",
-    borderRadius: "8px",
-    fontSize: "16px",
-    fontWeight: "500",
-    cursor: "pointer",
-    transition: "0.3s",
-    color: "white",
-  },
-  approveButton: {
-    backgroundColor: "#2e7d32", // Updated to match ReportWaste
-  },
-  approveButtonHover: {
-    backgroundColor: "#1b5e20", // Updated to match ReportWaste
-  },
-  rejectButton: {
-    backgroundColor: "#d32f2f", // Updated to match ReportWaste
-  },
-  rejectButtonHover: {
-    backgroundColor: "#b71c1c", // Updated to match ReportWaste
-  },
-  errorMessage: {
-    textAlign: "center",
-    color: "#d32f2f", // Updated to match ReportWaste
-    fontSize: "18px",
-  },
-  loading: {
-    textAlign: "center",
-    fontSize: "18px",
-    color: "#4a5568", // Updated to match ReportWaste
-  },
-  "@media (max-width: 768px)": {
-    topSection: {
-      flexDirection: "column",
-    },
-    wasteDetailsCard: {
-      padding: "20px",
-    },
-    wasteDetailsTitle: {
-      fontSize: "22px",
-    },
-    map: {
-      height: "250px",
-    },
-  },
+const InfoItem = ({ label, value, status }) => {
+  let statusColor = "text-gray-700";
+  if (status === "approved") statusColor = "text-green-600";
+  if (status === "rejected") statusColor = "text-red-600";
+  if (status === "pending") statusColor = "text-orange-600";
+
+  return (
+    <div className="flex items-center gap-3">
+      <span className="font-medium text-gray-600">{label}:</span>
+      <span className={`font-semibold ${status ? statusColor : "text-[#1a3025]"}`}>{value}</span>
+    </div>
+  );
 };
+
+export default WasteDetails;

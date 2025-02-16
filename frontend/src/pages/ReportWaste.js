@@ -70,14 +70,21 @@ const ReportWaste = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.heading}>Report Waste</h2>
-      <p style={styles.subtext}>Help keep the environment clean by reporting waste in your area.</p>
+    <div className="max-w-xl mx-auto mt-16 p-6 bg-[#e6f4ea] rounded-xl shadow-md">
+      <h2 className="text-2xl font-bold text-[#1a3025] mb-4">Report Waste</h2>
+      <p className="text-gray-700 mb-6">Help keep the environment clean by reporting waste in your area.</p>
 
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <input type="text" placeholder="Describe the waste issue..." value={description} onChange={(e) => setDescription(e.target.value)} required style={styles.input} />
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <input
+          type="text"
+          placeholder="Describe the waste issue..."
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          required
+          className="p-3 border border-[#c8e6d5] rounded-md"
+        />
 
-        <select value={wasteType} onChange={(e) => setWasteType(e.target.value)} required style={styles.input}>
+        <select value={wasteType} onChange={(e) => setWasteType(e.target.value)} required className="p-3 border border-[#c8e6d5] rounded-md">
           <option value="">Select Waste Type</option>
           {wasteTypes.map((type) => (
             <option key={type} value={type}>
@@ -86,94 +93,24 @@ const ReportWaste = () => {
           ))}
         </select>
 
-        <label htmlFor="fileUpload" style={styles.fileLabel}>
+        <label htmlFor="fileUpload" className="py-2 px-4 bg-[#2e7d32] text-white text-center rounded-md cursor-pointer">
           Upload an Image
         </label>
-        <input type="file" id="fileUpload" accept="image/*" onChange={handleImageChange} required style={styles.fileInput} />
-        {preview && <img src={preview} alt="Preview" style={styles.preview} />}
+        <input type="file" id="fileUpload" accept="image/*" onChange={handleImageChange} required className="hidden" />
+        {preview && <img src={preview} alt="Preview" className="w-full h-auto rounded-md mt-2" />}
 
-        <p style={styles.mapInstructions}>Click on the map to pinpoint the waste location.</p>
-        <MapContainer center={location} zoom={12} style={styles.map}>
+        <p className="text-sm text-gray-600">Click on the map to pinpoint the waste location.</p>
+        <MapContainer center={location} zoom={12} className="w-full h-72 rounded-md">
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           <LocationMarker />
         </MapContainer>
 
-        <button type="submit" disabled={isSubmitting} style={styles.button}>
+        <button type="submit" disabled={isSubmitting} className="py-3 bg-[#2e7d32] text-white rounded-md font-medium hover:bg-[#1b5e20] transition">
           {isSubmitting ? "Submitting..." : "Submit Report"}
         </button>
       </form>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    maxWidth: "600px",
-    margin: "70px auto",
-    padding: "24px",
-    backgroundColor: "#e6f4ea",
-    borderRadius: "12px",
-    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-  },
-  heading: {
-    fontSize: "24px",
-    fontWeight: "bold",
-    color: "#1a3025",
-    marginBottom: "12px",
-  },
-  subtext: {
-    fontSize: "16px",
-    color: "#4a5568",
-    marginBottom: "20px",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "15px",
-  },
-  input: {
-    padding: "12px",
-    borderRadius: "8px",
-    border: "1px solid #c8e6d5",
-    fontSize: "16px",
-  },
-  fileLabel: {
-    padding: "10px 15px",
-    backgroundColor: "#2e7d32",
-    color: "white",
-    borderRadius: "5px",
-    cursor: "pointer",
-    fontSize: "16px",
-    textAlign: "center",
-  },
-  fileInput: {
-    display: "none",
-  },
-  preview: {
-    width: "100%",
-    height: "auto",
-    borderRadius: "8px",
-    marginTop: "10px",
-  },
-  mapInstructions: {
-    fontSize: "14px",
-    color: "#666",
-  },
-  map: {
-    width: "100%",
-    height: "300px",
-    borderRadius: "8px",
-  },
-  button: {
-    padding: "12px",
-    backgroundColor: "#2e7d32",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    fontSize: "16px",
-    cursor: "pointer",
-    transition: "0.3s",
-  },
 };
 
 export default ReportWaste;
