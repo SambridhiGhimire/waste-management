@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import logo from "../assets/logo.png";
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
@@ -8,6 +9,15 @@ const Navbar = () => {
   return (
     <nav style={styles.navbar}>
       <Link to="/" style={styles.logo}>
+        <img
+          style={{
+            width: 35,
+            height: 35,
+            borderRadius: 99999,
+          }}
+          src={logo}
+          alt="logo"
+        />
         Waste Management
       </Link>
 
@@ -50,15 +60,18 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "center",
     padding: "10px 20px",
-    backgroundColor: "#FFF",
+    backgroundColor: "#d4ede4",
     color: "black",
-    borderBottom: "1px solid black",
+    // borderBottom: "1px solid black",
   },
   logo: {
     fontSize: "20px",
     fontWeight: "bold",
     textDecoration: "none",
     color: "black",
+    display: "flex",
+    alignItems: "center",
+    gap: "7px",
   },
   links: {
     display: "flex",

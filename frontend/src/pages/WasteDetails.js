@@ -61,61 +61,68 @@ const WasteDetails = () => {
     }
   };
 
-  if (loading) return <div className="loading">Loading...</div>;
+  if (loading) return <div style={styles.loading}>Loading...</div>;
 
   return (
-    <div className="waste-details-container">
-      <div className="waste-details-card">
-        <h1 className="waste-details-title">Waste Report Details</h1>
+    <div style={styles.wasteDetailsContainer}>
+      <div style={styles.wasteDetailsCard}>
+        <h1 style={styles.wasteDetailsTitle}>Waste Report Details</h1>
 
         {report ? (
           <>
             {/* Top Section: Image and Details Side by Side */}
-            <div className="top-section">
-              <div className="waste-image-container">
-                <img src={`http://localhost:5000/${report.imagePath}`} alt="Waste" className="waste-image" />
+            <div style={styles.topSection}>
+              <div style={styles.wasteImageContainer}>
+                <img src={`http://localhost:5000/${report.imagePath}`} alt="Waste" style={styles.wasteImage} />
               </div>
 
-              <div className="waste-info">
-                <div className="info-item">
-                  <span className="info-label">Description:</span>
-                  <span className="info-value">{report.description}</span>
+              <div style={styles.wasteInfo}>
+                <div style={styles.infoItem}>
+                  <span style={styles.infoLabel}>Description:</span>
+                  <span style={styles.infoValue}>{report.description}</span>
                 </div>
-                <div className="info-item">
-                  <span className="info-label">Waste Type:</span>
-                  <span className="info-value">{report.wasteType}</span>
+                <div style={styles.infoItem}>
+                  <span style={styles.infoLabel}>Waste Type:</span>
+                  <span style={styles.infoValue}>{report.wasteType}</span>
                 </div>
-                <div className="info-item">
-                  <span className="info-label">Status:</span>
-                  <span className={`status-badge ${report.status}`}>{report.status.toUpperCase()}</span>
+                <div style={styles.infoItem}>
+                  <span style={styles.infoLabel}>Status:</span>
+                  <span
+                    style={{
+                      ...styles.statusBadge,
+                      ...(report.status === "approved" ? styles.statusApproved : report.status === "rejected" ? styles.statusRejected : styles.statusPending),
+                    }}
+                  >
+                    {report.status.toUpperCase()}
+                  </span>
                 </div>
-                <div className="info-item">
-                  <span className="info-label">Reported by:</span>
-                  <span className="info-value">
+                <div style={styles.infoItem}>
+                  <span style={styles.infoLabel}>Reported by:</span>
+                  <span style={styles.infoValue}>
                     {report.user.name} ({report.user.email})
                   </span>
                 </div>
                 {report.status !== "pending" && report.approvedBy && (
-                  <div className="info-item">
-                    <span className="info-label">Approved/Rejected by:</span>
-                    <span className="info-value">
+                  <div style={styles.infoItem}>
+                    <span style={styles.infoLabel}>Approved/Rejected by:</span>
+                    <span style={styles.infoValue}>
                       {report.approvedBy.name} ({report.approvedBy.email})
                     </span>
                   </div>
                 )}
                 {report.status === "approved" && (
-                  <div className="info-item">
-                    <span className="info-label">Points Awarded:</span>
-                    <span className="info-value">{report.pointsAwarded}</span>
+                  <div style={styles.infoItem}>
+                    <span style={styles.infoLabel}>Points Awarded:</span>
+                    <span style={styles.infoValue}>{report.pointsAwarded}</span>
                   </div>
                 )}
               </div>
             </div>
 
             {/* Bottom Section: Horizontal Map */}
-            <div className="bottom-section">
-              <h2 className="location-title">Waste Location</h2>
-              <MapContainer center={[report.location.lat, report.location.lng]} zoom={15} className="map">
+            <div style={styles.bottomSection}>
+              <h2 style={styles.locationTitle}>Waste Location</h2>
+              <MapContainer center={[report.location.lat, report.location.lng]} zoom={15} style={styles.map}>
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 <Marker position={[report.location.lat, report.location.lng]} icon={markerIcon} />
               </MapContainer>
@@ -123,19 +130,19 @@ const WasteDetails = () => {
 
             {/* Admin Actions */}
             {user && user.role === "admin" && report.status === "pending" && (
-              <div className="admin-actions">
-                <input type="number" placeholder="Assign points" min="0" onChange={(e) => setPoints(e.target.value)} className="points-input" />
-                <button onClick={approveReport} className="action-button approve-button">
+              <div style={styles.adminActions}>
+                <input type="number" placeholder="Assign points" min="0" onChange={(e) => setPoints(e.target.value)} style={styles.pointsInput} />
+                <button onClick={approveReport} style={{ ...styles.actionButton, ...styles.approveButton }}>
                   Approve
                 </button>
-                <button onClick={rejectReport} className="action-button reject-button">
+                <button onClick={rejectReport} style={{ ...styles.actionButton, ...styles.rejectButton }}>
                   Reject
                 </button>
               </div>
             )}
           </>
         ) : (
-          <p className="error-message">Report not found.</p>
+          <p style={styles.errorMessage}>Report not found.</p>
         )}
       </div>
     </div>
@@ -143,181 +150,151 @@ const WasteDetails = () => {
 };
 
 export default WasteDetails;
-
-const styles = `
-  .waste-details-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f0f4f8;
-    padding: 20px;
-  }
-
-  .waste-details-card {
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-width: 1200px;
-    width: 100%;
-    padding: 30px;
-  }
-
-  .waste-details-title {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #2d3748;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-
-  .top-section {
-    display: flex;
-    gap: 30px;
-    margin-bottom: 30px;
-  }
-
-  .waste-image-container {
-    flex: 1;
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
-  .waste-image {
-    width: 100%;
-    height: auto;
-    border-radius: 12px;
-  }
-
-  .waste-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .info-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .info-label {
-    font-weight: 500;
-    color: #4a5568;
-  }
-
-  .info-value {
-    color: #2d3748;
-  }
-
-  .status-badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #ffffff;
-  }
-
-  .status-badge.approved {
-    background-color: #38a169;
-  }
-
-  .status-badge.rejected {
-    background-color: #e53e3e;
-  }
-
-  .status-badge.pending {
-    background-color: #dd6b20;
-  }
-
-  .bottom-section {
-    width: 100%;
-  }
-
-  .location-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #2d3748;
-    margin-bottom: 10px;
-  }
-
-  .map {
-    width: 100%;
-    height: 300px;
-    border-radius: 12px;
-  }
-
-  .admin-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-  }
-
-  .points-input {
-    padding: 10px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 1rem;
-    outline: none;
-  }
-
-  .action-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .approve-button {
-    background-color: #38a169;
-    color: #ffffff;
-  }
-
-  .approve-button:hover {
-    background-color: #2f8559;
-  }
-
-  .reject-button {
-    background-color: #e53e3e;
-    color: #ffffff;
-  }
-
-  .reject-button:hover {
-    background-color: #c53030;
-  }
-
-  .error-message {
-    text-align: center;
-    color: #e53e3e;
-    font-size: 1.25rem;
-  }
-
-  @media (max-width: 768px) {
-    .top-section {
-      flex-direction: column;
-    }
-
-    .waste-details-card {
-      padding: 20px;
-    }
-
-    .waste-details-title {
-      font-size: 1.75rem;
-    }
-
-    .map {
-      height: 250px;
-    }
-  }
-`;
-
-// Inject styles into the document
-const styleSheet = document.createElement("style");
-styleSheet.type = "text/css";
-styleSheet.innerText = styles;
-document.head.appendChild(styleSheet);
+const styles = {
+  wasteDetailsContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: "100vh",
+    backgroundColor: "#e6f4ea", // Updated to match ReportWaste
+    padding: "20px",
+    marginTop: "50px",
+  },
+  wasteDetailsCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: "12px",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+    maxWidth: "1200px",
+    width: "100%",
+    padding: "30px",
+  },
+  wasteDetailsTitle: {
+    fontSize: "24px",
+    fontWeight: "bold",
+    color: "#1a3025", // Updated to match ReportWaste
+    marginBottom: "20px",
+    textAlign: "center",
+  },
+  topSection: {
+    display: "flex",
+    gap: "30px",
+    marginBottom: "30px",
+  },
+  wasteImageContainer: {
+    flex: 1,
+    borderRadius: "12px",
+    overflow: "hidden",
+  },
+  wasteImage: {
+    width: "100%",
+    height: "auto",
+    borderRadius: "12px",
+  },
+  wasteInfo: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+  },
+  infoItem: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+  },
+  infoLabel: {
+    fontWeight: "500",
+    color: "#4a5568", // Updated to match ReportWaste
+  },
+  infoValue: {
+    color: "#1a3025", // Updated to match ReportWaste
+  },
+  statusBadge: {
+    padding: "6px 12px",
+    borderRadius: "20px",
+    fontSize: "14px",
+    fontWeight: "500",
+    color: "#ffffff",
+  },
+  statusApproved: {
+    backgroundColor: "#2e7d32", // Updated to match ReportWaste
+  },
+  statusRejected: {
+    backgroundColor: "#d32f2f", // Updated to match ReportWaste
+  },
+  statusPending: {
+    backgroundColor: "#e65100", // Updated to match ReportWaste
+  },
+  bottomSection: {
+    width: "100%",
+  },
+  locationTitle: {
+    fontSize: "18px",
+    fontWeight: "600",
+    color: "#1a3025", // Updated to match ReportWaste
+    marginBottom: "10px",
+  },
+  map: {
+    width: "100%",
+    height: "300px",
+    borderRadius: "12px",
+  },
+  adminActions: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    marginTop: "20px",
+  },
+  pointsInput: {
+    padding: "10px",
+    border: "1px solid #c8e6d5", // Updated to match ReportWaste
+    borderRadius: "8px",
+    fontSize: "16px",
+    outline: "none",
+  },
+  actionButton: {
+    padding: "12px",
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "16px",
+    fontWeight: "500",
+    cursor: "pointer",
+    transition: "0.3s",
+    color: "white",
+  },
+  approveButton: {
+    backgroundColor: "#2e7d32", // Updated to match ReportWaste
+  },
+  approveButtonHover: {
+    backgroundColor: "#1b5e20", // Updated to match ReportWaste
+  },
+  rejectButton: {
+    backgroundColor: "#d32f2f", // Updated to match ReportWaste
+  },
+  rejectButtonHover: {
+    backgroundColor: "#b71c1c", // Updated to match ReportWaste
+  },
+  errorMessage: {
+    textAlign: "center",
+    color: "#d32f2f", // Updated to match ReportWaste
+    fontSize: "18px",
+  },
+  loading: {
+    textAlign: "center",
+    fontSize: "18px",
+    color: "#4a5568", // Updated to match ReportWaste
+  },
+  "@media (max-width: 768px)": {
+    topSection: {
+      flexDirection: "column",
+    },
+    wasteDetailsCard: {
+      padding: "20px",
+    },
+    wasteDetailsTitle: {
+      fontSize: "22px",
+    },
+    map: {
+      height: "250px",
+    },
+  },
+};

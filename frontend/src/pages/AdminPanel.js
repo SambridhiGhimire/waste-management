@@ -140,6 +140,7 @@ const AdminPanel = () => {
 };
 
 export default AdminPanel;
+
 const getStatusStyle = (status) => ({
   backgroundColor: status === "approved" ? "#e6f4ea" : status === "rejected" ? "#fce8e8" : "#fff4e5",
   color: status === "approved" ? "#137333" : status === "rejected" ? "#a50e0e" : "#b93815",
@@ -149,14 +150,14 @@ const styles = {
   wrapper: {
     display: "flex",
     minHeight: "100vh",
-    backgroundColor: "#f8fafb",
+    backgroundColor: "#f0f7f4", // Light green background
     position: "relative",
     paddingTop: "40px",
   },
   sidebar: {
     width: "280px",
-    backgroundColor: "white",
-    borderRight: "1px solid #e1e5ea",
+    backgroundColor: "#d4ede4", // Light green sidebar
+    borderRight: "1px solid #c8e6d5",
     padding: "28px",
     display: "flex",
     flexDirection: "column",
@@ -178,7 +179,7 @@ const styles = {
   },
   mainContent: {
     flex: 1,
-    marginLeft: "300px",
+    marginLeft: "300px", // Increased from 280px to prevent overlap
     padding: "32px 40px",
     "@media (max-width: 768px)": {
       marginLeft: 0,
@@ -195,7 +196,7 @@ const styles = {
       zIndex: 1001,
       padding: "8px 12px",
       fontSize: "24px",
-      backgroundColor: "#ef4444",
+      backgroundColor: "#2e7d32",
       color: "white",
       border: "none",
       borderRadius: "4px",
@@ -215,20 +216,20 @@ const styles = {
     borderRadius: "50%",
     objectFit: "cover",
     marginBottom: "16px",
-    border: "3px solid #fee2e2",
+    border: "3px solid #c8e6d5",
     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
   },
   profileInitial: {
     width: "90px",
     height: "90px",
     borderRadius: "50%",
-    backgroundColor: "#fee2e2",
+    backgroundColor: "#c8e6d5",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     fontSize: "32px",
     fontWeight: "500",
-    color: "#ef4444",
+    color: "#2e7d32",
     marginBottom: "16px",
     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
   },
@@ -242,8 +243,8 @@ const styles = {
     marginBottom: "12px",
   },
   adminBadge: {
-    backgroundColor: "#fee2e2",
-    color: "#ef4444",
+    backgroundColor: "#c8e6d5",
+    color: "#2e7d32",
     padding: "6px 12px",
     borderRadius: "20px",
     fontSize: "14px",
@@ -272,19 +273,19 @@ const styles = {
     },
   },
   statCard: {
-    backgroundColor: "white",
+    backgroundColor: "#e6f4ea", // Light green card
     padding: "24px",
     borderRadius: "12px",
     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    border: "1px solid #fee2e2",
+    border: "1px solid #c8e6d5",
   },
   statValue: {
     fontSize: "32px",
     fontWeight: "600",
-    color: "#ef4444",
+    color: "#2e7d32",
     marginBottom: "8px",
   },
   statLabel: {
@@ -293,11 +294,11 @@ const styles = {
     fontWeight: "500",
   },
   reportsSection: {
-    backgroundColor: "white",
+    backgroundColor: "#e6f4ea", // Light green section
     borderRadius: "16px",
     padding: "32px",
     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
-    border: "1px solid #fee2e2",
+    border: "1px solid #c8e6d5",
   },
   sectionHeading: {
     fontSize: "20px",
@@ -314,12 +315,16 @@ const styles = {
     },
   },
   reportCard: {
-    backgroundColor: "white",
+    backgroundColor: "#ffffff", // White card for better contrast
     borderRadius: "12px",
-    border: "1px solid #fee2e2",
+    border: "1px solid #c8e6d5",
     padding: "20px",
     transition: "all 0.2s ease",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
+    "&:hover": {
+      transform: "translateY(-2px)",
+      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+    },
   },
   cardHeader: {
     display: "flex",
@@ -336,12 +341,12 @@ const styles = {
   },
   wasteType: {
     fontSize: "14px",
-    color: "#4a5568",
-    fontWeight: "500",
+    color: "#2e7d32", // Green text for waste type
+    fontWeight: "600",
   },
   reportDescription: {
     fontSize: "14px",
-    color: "#2d3748",
+    color: "#2d3748", // Darker text for better readability
     marginBottom: "16px",
     lineHeight: 1.6,
   },
@@ -352,11 +357,11 @@ const styles = {
     width: "100%",
     padding: "8px 12px",
     borderRadius: "6px",
-    border: "1px solid #e1e5ea",
+    border: "1px solid #c8e6d5",
     fontSize: "14px",
     "&:focus": {
       outline: "none",
-      borderColor: "#ef4444",
+      borderColor: "#2e7d32",
     },
   },
   cardFooter: {
@@ -365,7 +370,7 @@ const styles = {
     alignItems: "center",
     marginTop: "16px",
     paddingTop: "16px",
-    borderTop: "1px solid #fee2e2",
+    borderTop: "1px solid #e8f5e9",
   },
   actionButtons: {
     display: "flex",
@@ -381,6 +386,9 @@ const styles = {
     fontWeight: "500",
     cursor: "pointer",
     transition: "background-color 0.2s ease",
+    "&:hover": {
+      backgroundColor: "#1b5e20",
+    },
   },
   rejectButton: {
     backgroundColor: "#ef4444",
@@ -392,6 +400,9 @@ const styles = {
     fontWeight: "500",
     cursor: "pointer",
     transition: "background-color 0.2s ease",
+    "&:hover": {
+      backgroundColor: "#dc2626",
+    },
   },
   viewButton: {
     backgroundColor: "#f1f5f9",

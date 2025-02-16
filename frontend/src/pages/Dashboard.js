@@ -129,14 +129,14 @@ const styles = {
   wrapper: {
     display: "flex",
     minHeight: "100vh",
-    backgroundColor: "#f8fafb",
+    backgroundColor: "#f0f7f4", // Light green background
     position: "relative",
     paddingTop: "40px",
   },
   sidebar: {
     width: "280px",
-    backgroundColor: "white",
-    borderRight: "1px solid #e1e5ea",
+    backgroundColor: "#d4ede4", // Light green sidebar
+    borderRight: "1px solid #c8e6d5",
     padding: "28px",
     display: "flex",
     flexDirection: "column",
@@ -205,7 +205,7 @@ const styles = {
   container: {
     display: "flex",
     minHeight: "100vh",
-    backgroundColor: "#f8fafb",
+    backgroundColor: "#f0f7f4", // Light green background
   },
 
   profileSection: {
@@ -221,14 +221,14 @@ const styles = {
     borderRadius: "50%",
     objectFit: "cover",
     marginBottom: "16px",
-    border: "3px solid #e8f5e9",
+    border: "3px solid #c8e6d5",
     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
   },
   profileInitial: {
     width: "90px",
     height: "90px",
     borderRadius: "50%",
-    backgroundColor: "#e8f5e9",
+    backgroundColor: "#c8e6d5",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -248,7 +248,7 @@ const styles = {
     marginBottom: "12px",
   },
   pointsBadge: {
-    backgroundColor: "#e8f5e9",
+    backgroundColor: "#c8e6d5",
     padding: "10px 20px",
     borderRadius: "20px",
     display: "inline-flex",
@@ -282,14 +282,14 @@ const styles = {
     marginBottom: "28px",
   },
   statCard: {
-    backgroundColor: "white",
+    backgroundColor: "#e6f4ea", // Light green card
     padding: "24px",
     borderRadius: "12px",
     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    border: "1px solid #e8f5e9",
+    border: "1px solid #c8e6d5",
   },
   statValue: {
     fontSize: "32px",
@@ -303,11 +303,11 @@ const styles = {
     fontWeight: "500",
   },
   reportsSection: {
-    backgroundColor: "white",
+    backgroundColor: "#e6f4ea", // Light green section
     borderRadius: "16px",
     padding: "32px",
     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
-    border: "1px solid #e8f5e9",
+    border: "1px solid #c8e6d5",
   },
   sectionHeading: {
     fontSize: "20px",
@@ -316,9 +316,9 @@ const styles = {
     marginBottom: "28px",
   },
   reportCard: {
-    backgroundColor: "white",
+    backgroundColor: "#ffffff", // White card for better contrast
     borderRadius: "12px",
-    border: "1px solid #e8f5e9",
+    border: "1px solid #c8e6d5",
     padding: "20px",
     transition: "all 0.2s ease",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
@@ -342,12 +342,12 @@ const styles = {
   },
   wasteType: {
     fontSize: "14px",
-    color: "#4a5568",
-    fontWeight: "500",
+    color: "#2e7d32", // Green text for waste type
+    fontWeight: "600",
   },
   reportDescription: {
     fontSize: "14px",
-    color: "#2d3748",
+    color: "#2d3748", // Darker text for better readability
     marginBottom: "16px",
     lineHeight: 1.6,
   },
@@ -361,12 +361,12 @@ const styles = {
   },
   pointsAwarded: {
     fontSize: "14px",
-    color: "#2e7d32",
+    color: "#2e7d32", // Green text for points
     fontWeight: "600",
   },
   pendingLabel: {
     fontSize: "14px",
-    color: "#b93815",
+    color: "#b93815", // Orange text for pending status
     fontWeight: "500",
   },
   primaryButton: {

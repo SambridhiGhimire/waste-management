@@ -11,7 +11,7 @@ const ReportWaste = () => {
   const [wasteType, setWasteType] = useState("");
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [location, setLocation] = useState({ lat: 27.7172, lng: 85.324 }); // Default: Kathmandu
+  const [location, setLocation] = useState({ lat: 27.7172, lng: 85.324 });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const markerIcon = new L.Icon({
@@ -90,10 +90,9 @@ const ReportWaste = () => {
           Upload an Image
         </label>
         <input type="file" id="fileUpload" accept="image/*" onChange={handleImageChange} required style={styles.fileInput} />
-
         {preview && <img src={preview} alt="Preview" style={styles.preview} />}
 
-        <p style={styles.mapInstructions}>Click on the map to pinpoint waste location.</p>
+        <p style={styles.mapInstructions}>Click on the map to pinpoint the waste location.</p>
         <MapContainer center={location} zoom={12} style={styles.map}>
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           <LocationMarker />
@@ -110,9 +109,9 @@ const ReportWaste = () => {
 const styles = {
   container: {
     maxWidth: "600px",
-    margin: "60px auto",
-    padding: "20px",
-    backgroundColor: "#fff",
+    margin: "70px auto",
+    padding: "24px",
+    backgroundColor: "#e6f4ea",
     borderRadius: "12px",
     boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
   },
@@ -120,11 +119,11 @@ const styles = {
     fontSize: "24px",
     fontWeight: "bold",
     color: "#1a3025",
-    marginBottom: "10px",
+    marginBottom: "12px",
   },
   subtext: {
     fontSize: "16px",
-    color: "#555",
+    color: "#4a5568",
     marginBottom: "20px",
   },
   form: {
@@ -135,7 +134,7 @@ const styles = {
   input: {
     padding: "12px",
     borderRadius: "8px",
-    border: "1px solid #ccc",
+    border: "1px solid #c8e6d5",
     fontSize: "16px",
   },
   fileLabel: {
