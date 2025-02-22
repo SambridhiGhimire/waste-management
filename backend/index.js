@@ -9,6 +9,7 @@ const reportRoutes = require("./routes/reportRoutes");
 const path = require("path");
 const passport = require("passport");
 const session = require("express-session");
+const sendResetEmail = require("./utils/emailService").sendResetEmail;
 require("./config/passport");
 const app = express();
 

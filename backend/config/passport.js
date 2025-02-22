@@ -1,9 +1,12 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const LocalStrategy = require("passport-local").Strategy;
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 require("dotenv").config();
 
+// Google Login Strategy
 passport.use(
   new GoogleStrategy(
     {
@@ -20,19 +23,12 @@ passport.use(
             name: profile.displayName,
             email: profile.emails[0].value,
             googleId: profile.id,
-            profileImage: profile.photos[0].value,
           });
           await user.save();
         }
 
-        // Update profile image if changed
-        if (user.profileImage !== profile.photos[0].value) {
-          user.profileImage = profile.photos[0].value;
-          await user.save();
-        }
-
         // Generate JWT token
-        const token = jwt.sign({ id: user._id, name: user.name, email: user.email, role: user.role, profileImage: user.profileImage }, process.env.JWT_SECRET, {
+        const token = jwt.sign({ id: user._id, name: user.name, email: user.email, role: user.role }, process.env.JWT_SECRET, {
           expiresIn: process.env.JWT_EXPIRES_IN,
         });
 
@@ -42,6 +38,33 @@ passport.use(
       }
     }
   )
+);
+
+// Local Strategy (Email/Password)
+passport.use(
+  new LocalStrategy({ usernameField: "email" }, async (email, password, done) => {
+    try {
+      const user = await User.findOne({ email });
+
+      if (!user || !user.password) {
+        return done(null, false, { message: "Invalid email or password" });
+      }
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return done(null, false, { message: "Invalid email or password" });
+      }
+
+      // Generate JWT
+      const token = jwt.sign({ id: user._id, name: user.name, email: user.email, role: user.role }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_IN,
+      });
+
+      return done(null, { user, token });
+    } catch (error) {
+      return done(error, null);
+    }
+  })
 );
 
 passport.serializeUser((data, done) => {

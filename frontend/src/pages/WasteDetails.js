@@ -61,6 +61,21 @@ const WasteDetails = () => {
     }
   };
 
+  // ✅ Delete Report Function
+  const deleteReport = async () => {
+    if (!window.confirm("Are you sure you want to delete this report?")) return;
+
+    try {
+      await axios.delete(`http://localhost:5000/api/reports/${id}/delete`, { withCredentials: true });
+
+      alert("Report deleted successfully!");
+      navigate("/dashboard"); // Redirect back to dashboard after deletion
+    } catch (error) {
+      console.error("Error deleting report:", error);
+      alert("Failed to delete report.");
+    }
+  };
+
   if (loading) return <div className="text-center text-lg text-gray-700">Loading...</div>;
 
   return (
@@ -80,6 +95,18 @@ const WasteDetails = () => {
                 <InfoItem label="Reported by" value={`${report.user.name} (${report.user.email})`} />
                 {report.status !== "pending" && report.approvedBy && <InfoItem label="Approved/Rejected by" value={`${report.approvedBy.name} (${report.approvedBy.email})`} />}
                 {report.status === "approved" && <InfoItem label="Points Awarded" value={report.pointsAwarded} />}
+
+                {/* ✅ Edit Report Button (Only for the report owner) */}
+                {user && user.email === report.user.email && (
+                  <div className="flex gap-3">
+                    <button onClick={() => navigate(`/edit-waste/${id}`)} className="bg-blue-500 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition">
+                      Edit Report
+                    </button>
+                    <button onClick={deleteReport} className="bg-red-500 text-white px-4 py-2 rounded-md font-medium hover:bg-red-700 transition">
+                      Delete Report
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -111,6 +138,7 @@ const WasteDetails = () => {
   );
 };
 
+// ✅ Reusable Info Component
 const InfoItem = ({ label, value, status }) => {
   let statusColor = "text-gray-700";
   if (status === "approved") statusColor = "text-green-600";

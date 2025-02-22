@@ -1,6 +1,7 @@
 const WasteReport = require("../models/WasteReport");
 const User = require("../models/User");
-
+const path = require("path");
+const fs = require("fs");
 // Submit Waste Report
 const submitReport = async (req, res) => {
   const { location, description, wasteType } = req.body;
@@ -114,4 +115,61 @@ const getReport = async (req, res) => {
   }
 };
 
-module.exports = { submitReport, getAllReports, approveReport, rejectReport, getUserReports, getReport };
+// Edit Waste Report
+const editReport = async (req, res) => {
+  try {
+    const { description, wasteType, location } = req.body;
+    const report = await WasteReport.findById(req.params.id);
+
+    if (!report) return res.status(404).json({ error: "Report not found" });
+    if (report.user.toString() !== req.user.id) return res.status(403).json({ error: "Unauthorized to edit this report" });
+
+    // Update fields
+    if (description) report.description = description;
+    if (wasteType) report.wasteType = wasteType;
+    if (location) report.location = JSON.parse(location);
+
+    // If new image uploaded, delete old image
+    if (req.file) {
+      if (report.imagePath) {
+        const oldImagePath = path.join(__dirname, "..", report.imagePath);
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath); // Delete old image from server
+        }
+      }
+      report.imagePath = req.file.path;
+    }
+
+    await report.save();
+    res.json({ message: "Report updated successfully", report });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error updating report" });
+  }
+};
+
+// Delete Waste Report
+const deleteReport = async (req, res) => {
+  try {
+    const report = await WasteReport.findById(req.params.id);
+
+    if (!report) return res.status(404).json({ error: "Report not found" });
+    if (report.user.toString() !== req.user.id) return res.status(403).json({ error: "Unauthorized to delete this report" });
+
+    // Delete report image from server
+    if (report.imagePath) {
+      const imagePath = path.join(__dirname, "..", report.imagePath);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
+
+    await report.deleteOne();
+    res.json({ message: "Report deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error deleting report" });
+  }
+};
+
+module.exports = { submitReport, getAllReports, approveReport, rejectReport, getUserReports, getReport, editReport, deleteReport };

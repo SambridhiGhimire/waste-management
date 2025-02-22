@@ -65,14 +65,12 @@ const AdminPanel = () => {
       >
         <div className="flex flex-col items-center mb-8 mt-12">
           {user.profileImage ? (
-            <img src={user.profileImage} alt="Profile" className="w-24 h-24 rounded-full border-4 border-[#c8e6d5] shadow-md" />
+            <img src={`http://localhost:5000${user.profileImage}`} alt="Profile" className="w-24 h-24 rounded-full border-4 border-[#c8e6d5] shadow-md object-cover" />
           ) : (
             <div className="w-24 h-24 rounded-full bg-[#c8e6d5] flex items-center justify-center text-3xl font-medium text-[#2e7d32] shadow-md">{user.name.charAt(0)}</div>
           )}
-          <div className="text-center">
-            <h2 className="text-xl font-semibold text-[#1a3025] mb-3">{user.name}</h2>
-            <div className="bg-[#c8e6d5] text-[#2e7d32] px-3 py-1.5 rounded-full text-sm font-semibold inline-block">Admin</div>
-          </div>
+          <h2 className="text-xl font-semibold text-[#1a3025] mt-4">{user.name}</h2>
+          <div className="bg-[#c8e6d5] text-[#2e7d32] px-3 py-1.5 rounded-full text-sm font-semibold mt-2">Admin</div>
         </div>
       </div>
 

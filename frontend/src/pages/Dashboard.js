@@ -38,7 +38,7 @@ const Dashboard = () => {
       >
         <div className="flex flex-col items-center mb-8 mt-12">
           {user.profileImage ? (
-            <img src={user.profileImage} alt="Profile" className="w-24 h-24 rounded-full border-4 border-[#c8e6d5] shadow-md" />
+            <img src={`http://localhost:5000${user.profileImage}`} alt="Profile" className="w-24 h-24 rounded-full border-4 border-[#c8e6d5] shadow-md object-cover" />
           ) : (
             <div className="w-24 h-24 rounded-full bg-[#c8e6d5] flex items-center justify-center text-3xl font-medium text-[#2e7d32] shadow-md">{user.name.charAt(0)}</div>
           )}
@@ -46,6 +46,9 @@ const Dashboard = () => {
           <div className="bg-[#c8e6d5] text-[#2e7d32] px-3 py-1.5 rounded-full text-sm font-semibold mt-2">{user.points} Points</div>
         </div>
         <div className="flex flex-col gap-3">
+          <Link to="/edit-profile" className="text-center bg-[#1e88e5] text-white py-2 rounded-md font-medium hover:bg-[#1565c0] transition">
+            Edit Profile
+          </Link>
           <Link to="/report" className="text-center bg-[#2e7d32] text-white py-2 rounded-md font-medium hover:bg-[#1b5e20] transition">
             Report Waste
           </Link>
@@ -113,6 +116,9 @@ const ReportCard = ({ report, navigate }) => (
       >
         View Details
       </button>
+      <Link to={`/edit-waste/${report._id}`} className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
+        Edit
+      </Link>
     </div>
   </div>
 );
